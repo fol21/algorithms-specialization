@@ -129,6 +129,30 @@ void Spec_Quicksort_v1::_lomuto_quicksort(vector<int>* arr, int low, int high, i
     return _lomuto_quicksort(arr, low, high, comps, FIRST);
 }
 
+void Spec_Quicksort_v1::_choose_lomuto(vector<int>* arr, int low, int high, int* comps, Quicksort_Partition_Type ptype)
+{
+    switch (ptype)
+    {
+    case FIRST:
+        _lomuto_quicksort(arr, low, high, comps, FIRST, false);
+        break;
+    case FIRST_MEDIAN:
+        _lomuto_quicksort(arr, low, high, comps, FIRST_MEDIAN, true);
+        break;
+    case LAST:
+        _lomuto_quicksort(arr, low, high, comps, LAST, false);
+        break;
+    case LAST_MEDIAN:
+        _lomuto_quicksort(arr, low, high, comps, LAST_MEDIAN, true);
+        break;
+    
+    default:
+        _lomuto_quicksort(arr, low, high, comps, FIRST, false);
+        break;
+    }
+}
+
+
 void Spec_Quicksort_v1::_hoare_quicksort(vector<int>* arr, int low, int high, int* comps)
 {
     if (low >= 0 && high >= 0 && low < high)
@@ -139,13 +163,32 @@ void Spec_Quicksort_v1::_hoare_quicksort(vector<int>* arr, int low, int high, in
     }
 }
 
+int Spec_Quicksort_v1::quicksort(vector<int>* arr, Quicksort_Type type, Quicksort_Partition_Type partition)
+{
+    int comps = 0;
+    switch (type)
+    {
+    case LOMUTO:
+        _choose_lomuto(arr, 0, arr->size() - 1, &comps, partition);
+        break;
+    case HOARE:
+        _hoare_quicksort(arr, 0, arr->size() - 1, &comps);
+        break;
+    
+    default:
+        _choose_lomuto(arr, 0, arr->size() - 1, &comps, FIRST);
+        break;
+    }
+    return comps;
+}
+
 int Spec_Quicksort_v1::quicksort(vector<int>* arr, Quicksort_Type type)
 {
     int comps = 0;
     switch (type)
     {
     case LOMUTO:
-        _lomuto_quicksort(arr, 0, arr->size() - 1, &comps);
+        _choose_lomuto(arr, 0, arr->size() - 1, &comps, FIRST);
         break;
     case HOARE:
         _hoare_quicksort(arr, 0, arr->size() - 1, &comps);
@@ -161,7 +204,7 @@ int Spec_Quicksort_v1::quicksort(vector<int>* arr, Quicksort_Type type)
 int Spec_Quicksort_v1::quicksort(vector<int>* arr)
 {
     int comps = 0;
-    _lomuto_quicksort(arr, 0, arr->size() - 1, &comps, LAST, true);
+    _choose_lomuto(arr, 0, arr->size() - 1, &comps,  FIRST);
     return comps;
 }
 

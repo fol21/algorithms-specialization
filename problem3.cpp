@@ -51,14 +51,41 @@ void _print_vector(vector<int> vec)
 
 int main(int argc, const char** argv) {
 
-    // auto arr = getInput("inputs/input_1k.txt");
-    auto arr = vector<int>({3,1,5,4,8,6,7});
-    int comps =  Spec_Quicksort_v1::quicksort(&arr);
+    auto raw = getInput("inputs/input_10k.txt");
+    // auto arr = vector<int>({3,1,5,4,8,6,7});
     // int comps =  Spec_Quicksort_v1::quicksort(&arr, HOARE);
-
+    auto arr = vector<int>();
+    long int comps = -1;
+    cout << "###### Lomuto Quicksort Pivot is First" << "\n";
+    arr = vector<int>(raw);
+    comps =  Spec_Quicksort_v1::quicksort(&arr);
     cout << "Number of invertions: " << Spec_Algorithms_v1::naiveInvCount(arr) << "\n";
-    cout << "Number of comparissons: " << comps << "\n";
+    cout << "Number of comparissons: " << comps << "\n\n";
     
-     _print_vector(arr);
+    cout << "###### Lomuto Quicksort Pivot is First with Median" << "\n";
+    arr = vector<int>(raw);
+    comps =  Spec_Quicksort_v1::quicksort(&arr, LOMUTO, FIRST_MEDIAN);
+    cout << "Number of invertions: " << Spec_Algorithms_v1::naiveInvCount(arr) << "\n";
+    cout << "Number of comparissons: " << comps << "\n\n";
+    
+    cout << "###### Lomuto Quicksort Pivot is Last" << "\n";
+    arr = vector<int>(raw);
+    comps =  Spec_Quicksort_v1::quicksort(&arr, LOMUTO, LAST);
+    cout << "Number of invertions: " << Spec_Algorithms_v1::naiveInvCount(arr) << "\n";
+    cout << "Number of comparissons: " << comps << "\n\n";
+    
+    cout << "###### Lomuto Quicksort Pivot is Last with Median" << "\n";
+    arr = vector<int>(raw);
+    comps =  Spec_Quicksort_v1::quicksort(&arr, LOMUTO, LAST_MEDIAN);
+    cout << "Number of invertions: " << Spec_Algorithms_v1::naiveInvCount(arr) << "\n";
+    cout << "Number of comparissons: " << comps << "\n\n";
+    
+    cout << "###### Hoare Quicksort" << "\n";
+    arr = vector<int>(raw);
+    comps =  Spec_Quicksort_v1::quicksort(&arr, HOARE);
+    cout << "Number of invertions: " << Spec_Algorithms_v1::naiveInvCount(arr) << "\n";
+    cout << "Number of comparissons: " << comps << "\n\n";
+    
+    //  _print_vector(arr);
     return 0;
 }

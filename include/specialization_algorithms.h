@@ -32,7 +32,8 @@ class Spec_Algorithms_v1
 };
 
 enum Quicksort_Type {LOMUTO, HOARE};
-enum Quicksort_Partition_Type {FIRST, MEDIAN, LAST};
+enum Quicksort_Partition_Type {FIRST, FIRST_MEDIAN, LAST, LAST_MEDIAN};
+
 
 class Spec_Quicksort_v1
 {
@@ -51,6 +52,7 @@ class Spec_Quicksort_v1
     static void _lomuto_quicksort(vector<int>* arr, int low, int high, int* comps, Quicksort_Partition_Type ptype, bool use_median_of_three);
     static void _lomuto_quicksort(vector<int>* arr, int low, int high, int* comps, Quicksort_Partition_Type ptype);
     static void _lomuto_quicksort(vector<int>* arr, int low, int high, int* comps);
+    static void _choose_lomuto(vector<int>* arr, int low, int high, int* comps, Quicksort_Partition_Type ptype);
 
     // Sorts a (portion of an) array, divides it into partitions, then sorts those
     // algorithm quicksort(A, lo, hi) is 
@@ -78,8 +80,8 @@ class Spec_Quicksort_v1
     static int _last_element_partition(vector<int>* arr, int low, int high, int* comps);
 
     static int _median_element_partition(vector<int>* arr, int low, int high, int* comps);
-    
     public:
+        static int quicksort(vector<int>* arr, Quicksort_Type type, Quicksort_Partition_Type partition);
         static int quicksort(vector<int>* arr, Quicksort_Type type);
         static int quicksort(vector<int>* arr);
 };
