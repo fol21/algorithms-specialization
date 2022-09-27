@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <cmath>
 
 using namespace std;
@@ -32,7 +33,7 @@ class Spec_Algorithms_v1
 };
 
 enum Quicksort_Type {LOMUTO, HOARE};
-enum Quicksort_Partition_Type {FIRST, FIRST_MEDIAN, LAST, LAST_MEDIAN};
+enum Quicksort_Partition_Type {FIRST,MEDIAN, LAST};
 
 
 class Spec_Quicksort_v1
@@ -49,10 +50,8 @@ class Spec_Quicksort_v1
         
     //   quicksort(A, lo, p - 1) // Left side of pivot
     //   quicksort(A, p + 1, hi) // Right side of pivot
-    static void _lomuto_quicksort(vector<int>* arr, int low, int high, int* comps, Quicksort_Partition_Type ptype, bool use_median_of_three);
-    static void _lomuto_quicksort(vector<int>* arr, int low, int high, int* comps, Quicksort_Partition_Type ptype);
-    static void _lomuto_quicksort(vector<int>* arr, int low, int high, int* comps);
-    static void _choose_lomuto(vector<int>* arr, int low, int high, int* comps, Quicksort_Partition_Type ptype);
+    static int _lomuto_quicksort(vector<int>* arr, int low, int high, Quicksort_Partition_Type ptype);
+    static int _lomuto_quicksort(vector<int>* arr, int low, int high);
 
     // Sorts a (portion of an) array, divides it into partitions, then sorts those
     // algorithm quicksort(A, lo, hi) is 
@@ -60,7 +59,7 @@ class Spec_Quicksort_v1
     //     p := partition(A, lo, hi) 
     //     quicksort(A, lo, p) // Note: the pivot is now included
     // quicksort(A, p + 1, hi) 
-    static void _hoare_quicksort(vector<int>* arr, int low, int high, int* comps);
+    static int _hoare_quicksort(vector<int>* arr, int low, int high);
     // algorithm partition(A, lo, hi) is 
     //   pivot := A[hi] // Choose the last element as the pivot
 
@@ -74,14 +73,15 @@ class Spec_Quicksort_v1
     //   i := i + 1
     //   swap A[i] with A[hi]
     //   return i // the pivot index
-    static int _first_element_partition(vector<int>* arr, int low, int high, int* comps, bool use_median_of_three);
-    static int _first_element_partition(vector<int>* arr, int low, int high, int* comps);
-    static int _last_element_partition(vector<int>* arr, int low, int high, int* comps, bool use_median_of_three);
-    static int _last_element_partition(vector<int>* arr, int low, int high, int* comps);
+    static int _partition(vector<int>* arr, int low, int high, int pindex);
+    static int _first_element_partition(vector<int>* arr, int low, int high);
+    static int _last_element_partition(vector<int>* arr, int low, int high);
 
-    static int _median_element_partition(vector<int>* arr, int low, int high, int* comps);
+    static int _use_median_of_three(vector<int>* arr, int low, int high);
+
+    static int _hoare_partition(vector<int>* arr, int low, int high);
+    
     public:
         static int quicksort(vector<int>* arr, Quicksort_Type type, Quicksort_Partition_Type partition);
-        static int quicksort(vector<int>* arr, Quicksort_Type type);
         static int quicksort(vector<int>* arr);
 };

@@ -20,7 +20,7 @@ BIN = ./bin
 OBJ = ./src/obj
 
 #Objects
-_FOBJ = specialization_algorithms.o
+_FOBJ = specialization_algorithms.o utils.o
 FOBJ := $(_FOBJ:%.o=./src/obj/%.o)
 
 ###### Dependencies #######
@@ -28,8 +28,12 @@ FOBJ := $(_FOBJ:%.o=./src/obj/%.o)
 specialization_algorithms: ./src/specialization_algorithms.cpp ./include/specialization_algorithms.h
 	$(CXX) $(LIBS) ${CFLAGS} $(OFLAGS) $< -o ./src/obj/$@.o
 
+utils: ./src/utils.cpp ./include/utils.h
+	$(CXX) $(LIBS) ${CFLAGS} $(OFLAGS) $< -o ./src/obj/$@.o
+
 dependencies:
 	make specialization_algorithms
+	make utils
 
 ###### Test ######
 
@@ -41,6 +45,10 @@ dependencies:
 
 
 ###### Applications #####
+
+problem2 : problem2.cpp $(FOBJ)
+	make dependencies
+	$(CXX) $(LIBS) $(CFLAGS) -g -o $(BIN)/$@ $^ $(LINKS)
 
 problem3 : problem3.cpp $(FOBJ)
 	make dependencies

@@ -97,105 +97,66 @@ long unsigned int Spec_Algorithms_v1::partialInvCount(vector<int> arr, int from_
     return partialInvCount(arr, from_index, arr.size() - 1);
 }
 
-void Spec_Quicksort_v1::_lomuto_quicksort(vector<int>* arr, int low, int high, int* comps, Quicksort_Partition_Type ptype, bool use_median_of_three)
+int Spec_Quicksort_v1::_lomuto_quicksort(vector<int>* arr, int low, int high, Quicksort_Partition_Type ptype)
 {
-    if (high <= low || low < 0) return;
-
+    if (high <= low || low < 0) 
+    {
+        return 0;
+    }
     int p;
     switch (ptype)
     {
     case FIRST:
-        p =  _first_element_partition(arr, low, high, comps, use_median_of_three);
+        p =  _first_element_partition(arr, low, high);
         break;
     case LAST:
-        p =  _last_element_partition(arr, low, high, comps, use_median_of_three);
+        p =  _last_element_partition(arr, low, high);
+        break;
+    case  MEDIAN:
+        p =  _partition(arr, low, high, _use_median_of_three(arr, low, high));
         break;
     default:
-        p =  _first_element_partition(arr, low, high, comps, use_median_of_three);
+        p =  _first_element_partition(arr, low, high);
         break;
     }
 
-    _lomuto_quicksort(arr, low, p - 1, comps);
-    _lomuto_quicksort(arr, p + 1, high, comps);
+    int left = _lomuto_quicksort(arr, low, p - 1, ptype);
+    int right = _lomuto_quicksort(arr, p + 1, high, ptype);
+    return left + right + (high - low);
 }
 
-void Spec_Quicksort_v1::_lomuto_quicksort(vector<int>* arr, int low, int high, int* comps, Quicksort_Partition_Type ptype)
+int Spec_Quicksort_v1::_lomuto_quicksort(vector<int>* arr, int low, int high)
 {
-    return _lomuto_quicksort(arr, low, high, comps, ptype, false);
+    return _lomuto_quicksort(arr, low, high, FIRST);
 }
 
-void Spec_Quicksort_v1::_lomuto_quicksort(vector<int>* arr, int low, int high, int* comps)
-{
-    return _lomuto_quicksort(arr, low, high, comps, FIRST);
-}
-
-void Spec_Quicksort_v1::_choose_lomuto(vector<int>* arr, int low, int high, int* comps, Quicksort_Partition_Type ptype)
-{
-    switch (ptype)
-    {
-    case FIRST:
-        _lomuto_quicksort(arr, low, high, comps, FIRST, false);
-        break;
-    case FIRST_MEDIAN:
-        _lomuto_quicksort(arr, low, high, comps, FIRST_MEDIAN, true);
-        break;
-    case LAST:
-        _lomuto_quicksort(arr, low, high, comps, LAST, false);
-        break;
-    case LAST_MEDIAN:
-        _lomuto_quicksort(arr, low, high, comps, LAST_MEDIAN, true);
-        break;
-    
-    default:
-        _lomuto_quicksort(arr, low, high, comps, FIRST, false);
-        break;
-    }
-}
-
-
-void Spec_Quicksort_v1::_hoare_quicksort(vector<int>* arr, int low, int high, int* comps)
+int Spec_Quicksort_v1::_hoare_quicksort(vector<int>* arr, int low, int high)
 {
     if (low >= 0 && high >= 0 && low < high)
     {
-        int p = _median_element_partition(arr, low, high, comps);
-        _hoare_quicksort(arr, low, p, comps);
-        _hoare_quicksort(arr, p + 1, high, comps);
+        int p = _hoare_partition(arr, low, high);
+        int left = _hoare_quicksort(arr, low, p);
+        int right = _hoare_quicksort(arr, p + 1, high);
+        return left + right + high - 1; 
     }
+    return 0;
 }
 
 int Spec_Quicksort_v1::quicksort(vector<int>* arr, Quicksort_Type type, Quicksort_Partition_Type partition)
 {
     int comps = 0;
+    int size = arr->size();
     switch (type)
     {
     case LOMUTO:
-        _choose_lomuto(arr, 0, arr->size() - 1, &comps, partition);
+        comps = _lomuto_quicksort(arr, 0, size - 1, partition);
         break;
     case HOARE:
-        _hoare_quicksort(arr, 0, arr->size() - 1, &comps);
+       comps =  _hoare_quicksort(arr, 0, size - 1);
         break;
     
     default:
-        _choose_lomuto(arr, 0, arr->size() - 1, &comps, FIRST);
-        break;
-    }
-    return comps;
-}
-
-int Spec_Quicksort_v1::quicksort(vector<int>* arr, Quicksort_Type type)
-{
-    int comps = 0;
-    switch (type)
-    {
-    case LOMUTO:
-        _choose_lomuto(arr, 0, arr->size() - 1, &comps, FIRST);
-        break;
-    case HOARE:
-        _hoare_quicksort(arr, 0, arr->size() - 1, &comps);
-        break;
-    
-    default:
-        _lomuto_quicksort(arr, 0, arr->size() - 1, &comps);
+        comps = _lomuto_quicksort(arr, 0, size - 1, partition);
         break;
     }
     return comps;
@@ -203,31 +164,17 @@ int Spec_Quicksort_v1::quicksort(vector<int>* arr, Quicksort_Type type)
 
 int Spec_Quicksort_v1::quicksort(vector<int>* arr)
 {
-    int comps = 0;
-    _choose_lomuto(arr, 0, arr->size() - 1, &comps,  FIRST);
-    return comps;
+    return quicksort(arr, LOMUTO, FIRST);
 }
 
-int Spec_Quicksort_v1::_first_element_partition(vector<int>* arr, int low, int high, int* comps, bool use_median_of_three)
+int Spec_Quicksort_v1::_partition(vector<int>* arr, int low, int high, int pindex)
 {
-    int p;
-    if(use_median_of_three)
-    {
-        int mid = (int)floor(low/2 + high/2);
-        if ((*arr)[mid] > (*arr)[low])
-            _swap(arr, low, mid);
-        if ((*arr)[high] < (*arr)[low])
-            _swap(arr, low, high);
-        if ((*arr)[mid] > (*arr)[high])
-            _swap(arr, mid, high);
-        p = (*arr)[low];
-    } else 
-        p = (*arr)[low];
+    if (pindex != low) _swap(arr, low, pindex);
+    int p = (*arr)[low];
 
     int i = low + 1;
     for (int j = low + 1; j <= high; j++)
     {
-        (*comps)++;
         if ((*arr)[j] < p)
         {
             _swap<int>(arr, j, i);
@@ -238,47 +185,33 @@ int Spec_Quicksort_v1::_first_element_partition(vector<int>* arr, int low, int h
     return i-1;
 }
 
-int Spec_Quicksort_v1::_first_element_partition(vector<int>* arr, int low, int high, int* comps)
+int Spec_Quicksort_v1::_first_element_partition(vector<int>* arr, int low, int high)
 {
-    return _first_element_partition(arr, low, high, comps, false);
+    return _partition(arr, low, high, low);
 }
 
-int Spec_Quicksort_v1::_last_element_partition(vector<int>* arr, int low, int high, int* comps, bool use_median_of_three)
+int Spec_Quicksort_v1::_last_element_partition(vector<int>* arr, int low, int high)
 {
-    int p;
-    if(use_median_of_three)
-    {
-        int mid = (int)floor(low/2 + high/2);
-        if ((*arr)[mid] < (*arr)[low])
-            _swap(arr, low, mid);
-        if ((*arr)[high] < (*arr)[low])
-            _swap(arr, low, high);
-        if ((*arr)[mid] < (*arr)[high])
-            _swap(arr, mid, high);
-        p = (*arr)[low];
-    } else 
-        p = (*arr)[low];
-
-    int i = low + 1;
-    for (int j = low + 1; j <= high; j++)
-    {
-        (*comps)++;
-        if ((*arr)[j] < p)
-        {
-            _swap<int>(arr, j, i);
-            i++;
-        }
-    }
-    _swap<int>(arr, low, i-1);
-    return i-1;
+    return _partition(arr, low, high, high);
 }
 
-int Spec_Quicksort_v1::_last_element_partition(vector<int>* arr, int low, int high, int* comps)
+int Spec_Quicksort_v1::_use_median_of_three(vector<int>* arr, int low, int high)
 {
-    return _last_element_partition(arr, low, high, comps, false);
+    int mid = (high - low + 1) % 2 == 0 ? 
+        (high - low + 1)/2 - 1 + low :
+        (high - low + 1)/2 + low ;
+    
+    int a = (*arr)[low];
+    int b = (*arr)[mid];
+    int c = (*arr)[high];
+    int maxi = max({a, b, c});
+    int mini = min({a, b, c});
+    if (a != maxi && a != mini) return low;
+    else if (b != maxi && b != mini) return mid;
+    else return high;
 }
 
-int Spec_Quicksort_v1::_median_element_partition(vector<int>* arr, int low, int high, int* comps)
+int Spec_Quicksort_v1::_hoare_partition(vector<int>* arr, int low, int high)
 {
 
     int mid = (int)floor(low/2 + high/2);
@@ -293,11 +226,11 @@ int Spec_Quicksort_v1::_median_element_partition(vector<int>* arr, int low, int 
     {
     // Move the left index to the right at least once and while the element at
     // the left index is less than the pivot
-    do {i++; (*comps)++;} while ((*arr)[i] < pivot);
+    do {i++;} while ((*arr)[i] < pivot);
 
     // Move the right index to the left at least once and while the element at
     // the right index is greater than the pivot
-    do {--j; (*comps)++;} while ((*arr)[j] > pivot);
+    do {--j;} while ((*arr)[j] > pivot);
 
     // If the indices crossed, return
     if (i >= j) {return j;}
