@@ -1,3 +1,6 @@
+#if !defined(SPECIALIZATION_ALGORITHM_V1_H)
+#define SPECIALIZATION_ALGORITHM_V1_H
+
 
 #include <iostream>
 #include <fstream>
@@ -85,3 +88,6 @@ class Spec_Quicksort_v1
         static int quicksort(vector<int>* arr, Quicksort_Type type, Quicksort_Partition_Type partition);
         static int quicksort(vector<int>* arr);
 };
+
+#endif // SPECIALIZATION_ALGORITHM_V1_H
+
