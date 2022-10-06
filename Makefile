@@ -25,15 +25,21 @@ FOBJ := $(_FOBJ:%.o=./src/obj/%.o)
 
 ###### Dependencies #######
 
-specialization_algorithms: ./src/specialization_algorithms.cpp ./include/specialization_algorithms.h
-	$(CXX) $(LIBS) ${CFLAGS} $(OFLAGS) $< -o ./src/obj/$@.o
 
-utils: ./src/utils.cpp ./include/utils.h
-	$(CXX) $(LIBS) ${CFLAGS} $(OFLAGS) $< -o ./src/obj/$@.o
+
+src/%: ./src/%.cpp ./include/%.h
+	mkdir -p ./src/obj
+	$(CXX) $(LIBS) ${CFLAGS} $(OFLAGS) $< -o ./src/obj/$(@F).o
+
+# specialization_algorithms: ./src/specialization_algorithms.cpp ./include/specialization_algorithms.h
+# 	$(CXX) $(LIBS) ${CFLAGS} $(OFLAGS) $< -o ./src/obj/$@.o
+
+# utils: ./src/utils.cpp ./include/utils.h
+# 	$(CXX) $(LIBS) ${CFLAGS} $(OFLAGS) $< -o ./src/obj/$@.o
 
 dependencies:
-	make specialization_algorithms
-	make utils
+	make src/specialization_algorithms
+	make src/utils
 
 ###### Test ######
 
@@ -46,14 +52,20 @@ dependencies:
 
 ###### Applications #####
 
-problem2 : problem2.cpp $(FOBJ)
-	make dependencies
-	$(CXX) $(LIBS) $(CFLAGS) -g -o $(BIN)/$@ $^ $(LINKS)
+# problem2 : problem2.cpp $(FOBJ)
+# 	make dependencies
+# 	$(CXX) $(LIBS) $(CFLAGS) -g -o $(BIN)/$@ $^ $(LINKS)
 
-problem3 : problem3.cpp $(FOBJ)
-	make dependencies
-	$(CXX) $(LIBS) $(CFLAGS) -g -o $(BIN)/$@ $^ $(LINKS)
+# problem3 : problem3.cpp $(FOBJ)
+# 	make dependencies
+# 	$(CXX) $(LIBS) $(CFLAGS) -g -o $(BIN)/$@ $^ $(LINKS)
 
-%.o : %.cpp $(FOBJ)
+problem% : problem%.cpp
 	make dependencies
-	$(CXX) $(LIBS) $(CFLAGS) ${OFLAGS} -o $@ $^ $(LINKS)
+	mkdir -p ./bin
+	$(CXX) $(LIBS) $(CFLAGS) -g -o $(BIN)/$@ $^ $(FOBJ) $(LINKS)
+
+problem%.o : problem%.cpp
+	make dependencies
+	mkdir -p ./obj
+	$(CXX) $(LIBS) $(CFLAGS) ${OFLAGS} -o ./obj/$@ $^ $(FOBJ) $(LINKS)
