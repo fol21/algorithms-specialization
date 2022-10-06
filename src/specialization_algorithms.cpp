@@ -1,7 +1,5 @@
 #include <specialization_algorithms.h>
 
-using namespace std;
-
 long unsigned int Spec_Algorithms_v1::_merge(int arr[], int temp[], unsigned int left, int mid, unsigned int right)
 {
     int i, j, k;
@@ -77,27 +75,27 @@ long unsigned int Spec_Algorithms_v1::naiveInvCount(int arr[], int n)
   
     return inv_count;
 }
-long unsigned int Spec_Algorithms_v1::naiveInvCount(vector<int> arr)
+long unsigned int Spec_Algorithms_v1::naiveInvCount(std::vector<int> arr)
 {
     return naiveInvCount(&arr[0], (int)arr.size());
 }
 
-long unsigned int Spec_Algorithms_v1::partialInvCount(vector<int> arr, int from_index, int to_index)
+long unsigned int Spec_Algorithms_v1::partialInvCount(std::vector<int> arr, int from_index, int to_index)
 {
     long unsigned int inv_count = 0;
-    for (int i = from_index; i <= min(to_index, (int)arr.size() - 1); i++)
-        for (int j = min(i + 1, (int)arr.size() - 1); j < (int)arr.size(); j++)
+    for (int i = from_index; i <= std::min(to_index, (int)arr.size() - 1); i++)
+        for (int j = std::min(i + 1, (int)arr.size() - 1); j < (int)arr.size(); j++)
             if (arr[i] > arr[j])
                 inv_count++;
   
     return inv_count;
 }
-long unsigned int Spec_Algorithms_v1::partialInvCount(vector<int> arr, int from_index)
+long unsigned int Spec_Algorithms_v1::partialInvCount(std::vector<int> arr, int from_index)
 {
     return partialInvCount(arr, from_index, arr.size() - 1);
 }
 
-int Spec_Quicksort_v1::_lomuto_quicksort(vector<int>* arr, int low, int high, Quicksort_Partition_Type ptype)
+int Spec_Quicksort_v1::_lomuto_quicksort(std::vector<int>* arr, int low, int high, Quicksort_Partition_Type ptype)
 {
     if (high <= low || low < 0) 
     {
@@ -125,12 +123,12 @@ int Spec_Quicksort_v1::_lomuto_quicksort(vector<int>* arr, int low, int high, Qu
     return left + right + (high - low);
 }
 
-int Spec_Quicksort_v1::_lomuto_quicksort(vector<int>* arr, int low, int high)
+int Spec_Quicksort_v1::_lomuto_quicksort(std::vector<int>* arr, int low, int high)
 {
     return _lomuto_quicksort(arr, low, high, FIRST);
 }
 
-int Spec_Quicksort_v1::_hoare_quicksort(vector<int>* arr, int low, int high)
+int Spec_Quicksort_v1::_hoare_quicksort(std::vector<int>* arr, int low, int high)
 {
     if (low >= 0 && high >= 0 && low < high)
     {
@@ -142,7 +140,7 @@ int Spec_Quicksort_v1::_hoare_quicksort(vector<int>* arr, int low, int high)
     return 0;
 }
 
-int Spec_Quicksort_v1::quicksort(vector<int>* arr, Quicksort_Type type, Quicksort_Partition_Type partition)
+int Spec_Quicksort_v1::quicksort(std::vector<int>* arr, Quicksort_Type type, Quicksort_Partition_Type partition)
 {
     int comps = 0;
     int size = arr->size();
@@ -162,12 +160,12 @@ int Spec_Quicksort_v1::quicksort(vector<int>* arr, Quicksort_Type type, Quicksor
     return comps;
 }
 
-int Spec_Quicksort_v1::quicksort(vector<int>* arr)
+int Spec_Quicksort_v1::quicksort(std::vector<int>* arr)
 {
     return quicksort(arr, LOMUTO, FIRST);
 }
 
-int Spec_Quicksort_v1::_partition(vector<int>* arr, int low, int high, int pindex)
+int Spec_Quicksort_v1::_partition(std::vector<int>* arr, int low, int high, int pindex)
 {
     if (pindex != low) _swap(arr, low, pindex);
     int p = (*arr)[low];
@@ -185,17 +183,17 @@ int Spec_Quicksort_v1::_partition(vector<int>* arr, int low, int high, int pinde
     return i-1;
 }
 
-int Spec_Quicksort_v1::_first_element_partition(vector<int>* arr, int low, int high)
+int Spec_Quicksort_v1::_first_element_partition(std::vector<int>* arr, int low, int high)
 {
     return _partition(arr, low, high, low);
 }
 
-int Spec_Quicksort_v1::_last_element_partition(vector<int>* arr, int low, int high)
+int Spec_Quicksort_v1::_last_element_partition(std::vector<int>* arr, int low, int high)
 {
     return _partition(arr, low, high, high);
 }
 
-int Spec_Quicksort_v1::_use_median_of_three(vector<int>* arr, int low, int high)
+int Spec_Quicksort_v1::_use_median_of_three(std::vector<int>* arr, int low, int high)
 {
     int mid = (high - low + 1) % 2 == 0 ? 
         (high - low + 1)/2 - 1 + low :
@@ -204,14 +202,14 @@ int Spec_Quicksort_v1::_use_median_of_three(vector<int>* arr, int low, int high)
     int a = (*arr)[low];
     int b = (*arr)[mid];
     int c = (*arr)[high];
-    int maxi = max({a, b, c});
-    int mini = min({a, b, c});
+    int maxi = std::max({a, b, c});
+    int mini = std::min({a, b, c});
     if (a != maxi && a != mini) return low;
     else if (b != maxi && b != mini) return mid;
     else return high;
 }
 
-int Spec_Quicksort_v1::_hoare_partition(vector<int>* arr, int low, int high)
+int Spec_Quicksort_v1::_hoare_partition(std::vector<int>* arr, int low, int high)
 {
 
     int mid = (int)floor(low/2 + high/2);
@@ -242,7 +240,7 @@ int Spec_Quicksort_v1::_hoare_partition(vector<int>* arr, int low, int high)
 }
 
 template<class T>
-void Spec_Quicksort_v1::_swap(vector<T>* arr, int idx1, int idx2)
+void Spec_Quicksort_v1::_swap(std::vector<T>* arr, int idx1, int idx2)
 {
     if(!(idx1 < 0 || idx1 >= (int)arr->size() || idx2 < 0 || idx2 >= (int)arr->size()))
     {
