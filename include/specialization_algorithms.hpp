@@ -1,24 +1,38 @@
 #include <vector>
 #include <string>
+#include <iostream>
+#include <list>
+#include <stack>
 #include <forward_list>
 
 
-template<class UniqueIdType = unsigned int>
-class Spec_Graph_Vertex_v1
+template<class VertexType>
+class Spec_Graph_v1
 {
-    UniqueIdType _id;
-    public:
-        UniqueIdType Id() {return _id;}
 
-        bool operator==(Spec_Graph_Vertex_v1<UniqueIdType> &obj)
-        {
-            return obj.Id() == this->_id;
-        }
-        Spec_Graph_Vertex_v1(UniqueIdType id);
+public:
+	unsigned int num_vertices; // No. of vertices
+	std::vector<std::list<VertexType>*> adj; // An array of adjacency lists
+
+	Spec_Graph_v1(unsigned int num_vertices);
+	void addEdge(VertexType v1, VertexType v2);
+
 };
 
-template<class UniqueIdType>
-Spec_Graph_Vertex_v1<UniqueIdType>::Spec_Graph_Vertex_v1(UniqueIdType id)
+
+template<class VertexType>
+Spec_Graph_v1<VertexType>::Spec_Graph_v1(unsigned int num_vertices)
 {
-    this->_id = id;
+	this->num_vertices = num_vertices;
+	adj = std::vector<std::list<VertexType>*>(num_vertices);
+	for(auto a : adj)
+	{
+		a = new std::list<VertexType>();
+	}
 }
+
+template<class VertexType>
+void Spec_Graph_v1<VertexType>::addEdge(VertexType v1, VertexType v2)
+{
+	adj[v1]->push_back(v2); // Add w to v’s list.
+}   

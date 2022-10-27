@@ -10,10 +10,19 @@
 #include <sys/time.h>
 #include <time.h>
 
-using namespace std;
+std::vector<int> getInput(std::string path);
 
-vector<int> getInput(string path);
+std::vector<std::string> split(std::string s, std::string del = " ");
 
-void print_vector(vector<int> vec);
+bool scontains(std::string str, std::string sub);
+
+template<typename T>
+void print_vector(std::vector<T> vec)
+{
+    std::cout << "[ ";
+    for (auto i: vec)
+        std::cout << i << ", ";
+    std::cout << "]\n";
+}
 
 #endif // UTILS_H
