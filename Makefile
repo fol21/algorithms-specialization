@@ -60,13 +60,13 @@ dependencies:
 # 	make dependencies
 # 	$(CXX) $(LIBS) $(CFLAGS) -g -o $(BIN)/$@ $^ $(LINKS)
 
-_COURSE = 2
-problem% : problems/course$(_COURSE)/problem%.cpp
+_COURSE = ${SPEC_COURSE}
+problem% : $(_COURSE)/problem%.cpp
 	make dependencies
 	mkdir -p ./bin
 	$(CXX) $(LIBS) $(CFLAGS) -g -o $(BIN)/$@ $^ $(FOBJ) $(LINKS)
 
-problem%.o : problems/course*/problem%.cpp
+problem%.o : $(_COURSE)/problem%.cpp
 	make dependencies
 	mkdir -p ./obj
 	$(CXX) $(LIBS) $(CFLAGS) ${OFLAGS} -o ./obj/$@ $^ $(FOBJ) $(LINKS)
