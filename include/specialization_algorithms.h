@@ -90,5 +90,16 @@ class Spec_Quicksort_v1
         static int quicksort(std::vector<int>* arr);
 };
 
+
+class Spec_Heapsort_v1
+{
+    public:
+     static void heapify(std::vector<int>* arr, int i);
+     static void heapify(int arr[], int N, int i);
+
+     static void heapSort(std::vector<int>* arr);
+     static void heapSort(int arr[], int N);
+
+};
 #endif // SPECIALIZATION_ALGORITHM_V1_H
 
