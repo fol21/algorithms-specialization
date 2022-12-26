@@ -1,5 +1,6 @@
 #include <iostream>
 #include <queue>
+#include <map>
 
 using namespace std;
 
@@ -26,15 +27,43 @@ struct Compare {
     }
 };
 
+struct HuffmanCodePair
+{
+    char letter;
+    string code;
+};
+
+
+void _getCodes(Node* root, vector<HuffmanCodePair>* codes, string buffer)
+{
+    if(root->left != nullptr)
+    {
+        _getCodes(root->left, codes, buffer + "0");
+    }
+    if(root->right != nullptr)
+    {
+        _getCodes(root->right, codes, buffer + "1");
+    }
+    if(!(root->left != nullptr || root->right != nullptr))
+        codes->push_back({root->letter, buffer}); 
+}
+
+void getCodes(Node* root, vector<HuffmanCodePair>* codes)
+{
+    string _empty = "";
+    _getCodes(root, codes, _empty);
+}
+
 int main() {
     // Alphabet and frequencies
-    char alphabet[5] = {'a', 'b', 'c', 'd', 'e'};
-    double frequencies[5] = {0.28, 0.27, 0.20, 0.15, 0.10};
+    map<char, double> frequencies = map<char, double>({
+        {'a', 0.25}, {'b', 0.25}, {'c', 0.20}, {'d', 0.15}, {'e', 0.10}, {'f', 0.05}
+    });
     
     // Create the leaf nodes for the Huffman tree
     priority_queue<Node*, vector<Node*>, Compare> pq;
-    for (int i = 0; i < 5; i++) {
-        pq.push(new Node(alphabet[i], frequencies[i]));
+    for (auto pair : frequencies) {
+        pq.push(new Node(pair.first, pair.second));
     }
     
     // Construct the Huffman tree
@@ -51,15 +80,11 @@ int main() {
     
     // Calculate the expected number of bits
     double expected_bits = 0;
-    for (int i = 0; i < 5; i++) {
-        // Find the length of the Huffman code for the current letter
-        Node* curr = root;
-        int code_length = 0;
-        while (curr->letter != alphabet[i]) {
-            
-        }
-        // Add the expected number of bits for the current letter to the total
-        expected_bits += frequencies[i] * code_length;
+    vector<HuffmanCodePair> codes = vector<HuffmanCodePair>();
+    getCodes(root, &codes);
+    for(int i = 0; i < codes.size(); i++)
+    {
+        expected_bits += codes[i].code.length() * frequencies[codes[i].letter];
     }
     
     // Multiply the expected number of bits by the number of letters in the document
